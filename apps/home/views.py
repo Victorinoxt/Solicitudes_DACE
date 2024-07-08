@@ -31,18 +31,22 @@ def lista_estudiantes(request, es_egresado):
 
 @login_required
 def crear_estudiante(request):
+    es_egresado = request.GET.get('es_egresado', '0')  # Default to 0 if not provided
     if request.method == "POST":
         form = EstudianteForm(request.POST)
         if form.is_valid():
-            estudiante = form.save()
-            return redirect('lista_estudiantes', es_egresado=int(estudiante.es_egresado))
+            estudiante = form.save(commit=False)
+            estudiante.es_egresado = es_egresado == '1'
+            estudiante.save()
+            return redirect('lista_estudiantes', es_egresado=es_egresado)
     else:
         form = EstudianteForm()
-    return render(request, 'solicitudes/formulario_estudiante.html', {'form': form})
+    return render(request, 'solicitudes/formulario_estudiante.html', {'form': form, 'es_egresado': es_egresado})
 
 @login_required
 def actualizar_estudiante(request, pk):
     estudiante = get_object_or_404(Estudiante, pk=pk)
+    es_egresado = int(estudiante.es_egresado)
     if request.method == "POST":
         form = EstudianteForm(request.POST, instance=estudiante)
         if form.is_valid():
@@ -51,10 +55,10 @@ def actualizar_estudiante(request, pk):
             if 'enviar_correo' in request.POST or estado_anterior != estudiante.estado_solicitud:
                 enviar_correo_cambio_estado(estudiante)
             estudiante.save()
-            return redirect('lista_estudiantes', es_egresado=int(estudiante.es_egresado))
+            return redirect('lista_estudiantes', es_egresado=es_egresado)
     else:
         form = EstudianteForm(instance=estudiante)
-    return render(request, 'solicitudes/formulario_estudiante.html', {'form': form, 'es_egresado': int(estudiante.es_egresado)})
+    return render(request, 'solicitudes/formulario_estudiante.html', {'form': form, 'es_egresado': es_egresado})
 
 @login_required
 def eliminar_estudiante(request, pk):

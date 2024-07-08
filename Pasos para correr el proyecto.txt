@@ -1,0 +1,10 @@
+ python -m virtualenv venv//1
+.\venv\Scripts\activate //2
+pip install -r requirements.txt//3
+cd apps//4
+python manage.py makemigrations//5 crear y gestionar bases de datos
+python manage.py migrate //6 base de datos
+python manage.py createsuperuser//7 esto es para crear un superusuario
+python manage.py runserver//8 para correr el servidor
+http://127.0.0.1:8000/    lo ponen en su navegados//9
+Contraseña e inicio de sesion:"Dace"//10

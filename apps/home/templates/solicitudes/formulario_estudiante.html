@@ -1,12 +1,23 @@
 {% extends 'solicitudes/base.html' %}
 
 {% block content %}
-<h2>{% if form.instance.pk %}Actualizar Estudiante{% else %}Nuevo Estudiante{% endif %}</h2>
-<form method="post" class="form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <button type="submit" name="enviar_correo" class="btn btn-secondary">Guardar y Enviar Correo</button>
-    <a href="{% url 'lista_estudiantes' es_egresado %}" class="btn btn-secondary">Cancelar</a>
-</form>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ form.instance.pk|yesno:"Editar Estudiante,Nuevo Estudiante" }}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="hidden" name="es_egresado" value="{{ es_egresado }}">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
