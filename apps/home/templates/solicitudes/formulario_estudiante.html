@@ -1,0 +1,12 @@
+{% extends 'solicitudes/base.html' %}
+
+{% block content %}
+<h2>{% if form.instance.pk %}Actualizar Estudiante{% else %}Nuevo Estudiante{% endif %}</h2>
+<form method="post" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="submit" name="enviar_correo" class="btn btn-secondary">Guardar y Enviar Correo</button>
+    <a href="{% url 'lista_estudiantes' es_egresado %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

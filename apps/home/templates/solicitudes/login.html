@@ -1,0 +1,14 @@
+{% extends 'solicitudes/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-4" style="width: 24rem;">
+        <h2 class="card-title text-center">Iniciar Sesión</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
