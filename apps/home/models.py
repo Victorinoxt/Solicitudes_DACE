@@ -1,3 +1,4 @@
+
 from django.db import models
 
 class Estudiante(models.Model):
@@ -15,7 +16,7 @@ class Estudiante(models.Model):
     ano_ingreso = models.IntegerField()
     carrera = models.CharField(max_length=100)
     estado_solicitud = models.CharField(max_length=20, choices=ESTADO_CHOICES)
-    es_egresado = models.BooleanField(default=False)  # False para admisión, True para egresados
+    es_egresado = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.nombre} {self.apellido} - {self.cedula}"

@@ -1,9 +1,10 @@
+# apps/home/views.py
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
 from django.db.models import Q
 import csv
@@ -11,7 +12,10 @@ import io
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from .models import Estudiante
-from .forms import EstudianteForm
+from .forms import EstudianteForm, AuthenticationFormCustom
+
+def home(request):
+    return render(request, 'solicitudes/home.html')
 
 @login_required
 def lista_estudiantes(request, es_egresado):
@@ -47,10 +51,10 @@ def crear_estudiante(request):
 def actualizar_estudiante(request, pk):
     estudiante = get_object_or_404(Estudiante, pk=pk)
     es_egresado = int(estudiante.es_egresado)
+    estado_anterior = estudiante.estado_solicitud
     if request.method == "POST":
         form = EstudianteForm(request.POST, instance=estudiante)
         if form.is_valid():
-            estado_anterior = estudiante.estado_solicitud
             estudiante = form.save(commit=False)
             if 'enviar_correo' in request.POST or estado_anterior != estudiante.estado_solicitud:
                 enviar_correo_cambio_estado(estudiante)
@@ -83,7 +87,7 @@ def enviar_correo_cambio_estado(estudiante):
 
 def login_view(request):
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+        form = AuthenticationFormCustom(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -91,8 +95,10 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 return redirect('home')
+            else:
+                form.add_error(None, "El nombre de usuario o la contraseña son incorrectos")
     else:
-        form = AuthenticationForm()
+        form = AuthenticationFormCustom()
     return render(request, 'solicitudes/login.html', {'form': form})
 
 def logout_view(request):

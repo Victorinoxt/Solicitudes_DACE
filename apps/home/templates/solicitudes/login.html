@@ -2,12 +2,24 @@
 
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card p-4" style="width: 24rem;">
-        <h2 class="card-title text-center">Iniciar Sesión</h2>
+    <div class="card p-4" style="width: 28rem;">
+        <h2 class="card-title text-center mb-4"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+            <div class="mb-4">
+                <label for="id_username" class="form-label">Nombre de usuario</label>
+                <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" class="form-control form-control-lg" required id="id_username">
+            </div>
+            <div class="mb-4">
+                <label for="id_password" class="form-label">Contraseña</label>
+                <input type="password" name="password" autocomplete="current-password" class="form-control form-control-lg" required id="id_password">
+            </div>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary btn-block btn-lg"><i class="fas fa-sign-in-alt"></i> Iniciar sesión</button>
         </form>
     </div>
 </div>
